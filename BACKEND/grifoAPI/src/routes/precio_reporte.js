@@ -1,6 +1,5 @@
 const express = require('express');
 const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -29,8 +28,6 @@ const router = express.Router();
  *   post:
  *     summary: Crea un nuevo reporte de precio
  *     tags: [Precio Reporte]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -69,8 +66,6 @@ const router = express.Router();
  *   put:
  *     summary: Actualiza un reporte
  *     tags: [Precio Reporte]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -83,8 +78,6 @@ const router = express.Router();
  *   delete:
  *     summary: Elimina un reporte
  *     tags: [Precio Reporte]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -161,7 +154,7 @@ router.get('/:id', async (req, res) => {
 /**
  * POST /precios - Crear nuevo reporte de precio
  */
-router.post('/', authenticate, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { id_grifo, id_combustible, precio } = req.body;
     const id_usuario = req.user.id;
@@ -190,7 +183,7 @@ router.post('/', authenticate, async (req, res) => {
 /**
  * PUT /precios/:id - Actualizar reporte de precio
  */
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { precio, es_verificado } = req.body;
@@ -217,7 +210,7 @@ router.put('/:id', authenticate, async (req, res) => {
 /**
  * DELETE /precios/:id - Eliminar reporte de precio
  */
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 

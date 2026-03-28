@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const swaggerUi = require('swagger-ui-express');
+
 const swaggerJsdoc = require('swagger-jsdoc');
+
 
 // Rutas
 const perfilUsuarioRoutes = require('./routes/perfil_usuario');
@@ -33,13 +35,6 @@ const swaggerOptions = {
       }
     ],
     components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT'
-        }
-      },
       schemas: {
         PerfilUsuario: {
           type: 'object',
@@ -82,10 +77,7 @@ const swaggerOptions = {
           }
         }
       }
-    },
-    security: [{
-      bearerAuth: []
-    }]
+    }
   },
   apis: ['./src/routes/*.js']
 };

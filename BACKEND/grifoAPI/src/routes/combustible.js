@@ -1,6 +1,5 @@
 const express = require('express');
 const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -16,8 +15,6 @@ const router = express.Router();
  *   post:
  *     summary: Crea un nuevo tipo de combustible
  *     tags: [Combustibles]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -52,8 +49,6 @@ const router = express.Router();
  *   put:
  *     summary: Actualiza un tipo de combustible
  *     tags: [Combustibles]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -66,8 +61,6 @@ const router = express.Router();
  *   delete:
  *     summary: Elimina un tipo de combustible
  *     tags: [Combustibles]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,7 +117,7 @@ router.get('/:id', async (req, res) => {
 /**
  * POST /combustibles - Crear nuevo tipo de combustible
  */
-router.post('/', authenticate, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { nombre } = req.body;
 
@@ -145,7 +138,7 @@ router.post('/', authenticate, async (req, res) => {
 /**
  * PUT /combustibles/:id - Actualizar tipo de combustible
  */
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre } = req.body;
@@ -171,7 +164,7 @@ router.put('/:id', authenticate, async (req, res) => {
 /**
  * DELETE /combustibles/:id - Eliminar tipo de combustible
  */
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 

@@ -1,6 +1,5 @@
 const express = require('express');
 const supabase = require('../config/supabase');
-const { authenticate } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -25,8 +24,6 @@ const router = express.Router();
  *   post:
  *     summary: Crea un nuevo grifo
  *     tags: [Grifos]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -71,8 +68,6 @@ const router = express.Router();
  *   put:
  *     summary: Actualiza un grifo
  *     tags: [Grifos]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -85,8 +80,6 @@ const router = express.Router();
  *   delete:
  *     summary: Elimina un grifo
  *     tags: [Grifos]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -155,7 +148,7 @@ router.get('/:id', async (req, res) => {
 /**
  * POST /grifos - Crear nuevo grifo
  */
-router.post('/', authenticate, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { nombre, direccion, latitud, longitud, empresa_bandera, distrito } = req.body;
 
@@ -183,7 +176,7 @@ router.post('/', authenticate, async (req, res) => {
 /**
  * PUT /grifos/:id - Actualizar grifo
  */
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { nombre, direccion, latitud, longitud, empresa_bandera, distrito } = req.body;
@@ -214,7 +207,7 @@ router.put('/:id', authenticate, async (req, res) => {
 /**
  * DELETE /grifos/:id - Eliminar grifo
  */
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 

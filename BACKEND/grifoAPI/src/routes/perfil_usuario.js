@@ -1,6 +1,5 @@
 const express = require('express');
 const supabase = require('../config/supabase');
-const { authenticate, optionalAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -13,17 +12,9 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Lista de perfiles
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/PerfilUsuario'
  *   post:
  *     summary: Crea un nuevo perfil de usuario
  *     tags: [Perfil Usuario]
- *     security:
- *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -38,8 +29,6 @@ const router = express.Router();
  *     responses:
  *       201:
  *         description: Perfil creado
- *       401:
- *         description: No autorizado
  */
 
 /**
@@ -54,48 +43,26 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: string
- *           format: uuid
  *     responses:
  *       200:
  *         description: Perfil encontrado
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/PerfilUsuario'
  *       404:
  *         description: Perfil no encontrado
  *   put:
  *     summary: Actualiza un perfil
  *     tags: [Perfil Usuario]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *               puntos_reputacion:
- *                 type: integer
  *     responses:
  *       200:
  *         description: Perfil actualizado
- *       403:
- *         description: No autorizado
  *   delete:
  *     summary: Elimina un perfil
  *     tags: [Perfil Usuario]
- *     security:
- *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -105,8 +72,6 @@ const router = express.Router();
  *     responses:
  *       204:
  *         description: Perfil eliminado
- *       403:
- *         description: No autorizado
  */
 
 /**
@@ -155,7 +120,7 @@ router.get('/:id', async (req, res) => {
  * POST /perfil_usuario - Crear nuevo perfil
  * Requiere autenticación
  */
-router.post('/', authenticate, async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { username, puntos_reputacion } = req.body;
     const userId = req.user.id;
@@ -183,15 +148,10 @@ router.post('/', authenticate, async (req, res) => {
  * PUT /perfil_usuario/:id - Actualizar perfil
  * Requiere autenticación
  */
-router.put('/:id', authenticate, async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { username, puntos_reputacion } = req.body;
-
-    // Verificar que el usuario actual es elpropietario del perfil
-    if (req.user.id !== id) {
-      return res.status(403).json({ error: 'No autorizado para actualizar este perfil' });
-    }
 
     const updates = {};
     if (username) updates.username = username;
@@ -216,14 +176,9 @@ router.put('/:id', authenticate, async (req, res) => {
  * DELETE /perfil_usuario/:id - Eliminar perfil
  * Requiere autenticación
  */
-router.delete('/:id', authenticate, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-
-    // Verificar que el usuario actual es elpropietario del perfil
-    if (req.user.id !== id) {
-      return res.status(403).json({ error: 'No autorizado para eliminar este perfil' });
-    }
 
     const { error } = await supabase
       .from('perfil_usuario')
